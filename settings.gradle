@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Bluetooth_BLE"
-include ':app'
+include ':BLE_MODULE'

@@ -132,7 +132,6 @@ public class BluetoothServiceClass extends Service {
                     connect(mBluetoothDeviceAddress);
                 }
                 isDisconnected = true;
-                Log.e(TAG, "Disconnected from GATT server.");
                 broadcastUpdate(intentAction);
             }
         }
@@ -146,7 +145,6 @@ public class BluetoothServiceClass extends Service {
             } else {
                 initializeGattServices(gatt.getServices());
                 if (mReadCharacteristic != null) {
-                    Log.e("not null", "------------- onCharacteristicRead status: " + status + "-->");
                     mBluetoothGatt.readCharacteristic(mReadCharacteristic);
                 }
             }
@@ -211,7 +209,6 @@ public class BluetoothServiceClass extends Service {
 
                 for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
                     int charaProp = gattCharacteristic.getProperties();
-                    Log.e("Properties", "" + charaProp);
 
                     if (charaProp > 0 || BluetoothGattCharacteristic.PROPERTY_READ > 0) {
                         if (mNotifyCharacteristic != null) {
@@ -219,7 +216,6 @@ public class BluetoothServiceClass extends Service {
                                     mNotifyCharacteristic, true);
                         }
 
-                        Log.e("Read char String is -->", "" + gattCharacteristic.getUuid().toString());
                         mReadCharacteristic = gattCharacteristic;
                         mBluetoothGatt.readCharacteristic(gattCharacteristic);  /// For Testing removed
                     }
@@ -227,13 +223,11 @@ public class BluetoothServiceClass extends Service {
                         mNotifyCharacteristic = gattCharacteristic;
                         mBluetoothGatt.setCharacteristicNotification(
                                 gattCharacteristic, true);
-                        Log.e("Read char String is -->", "" + gattCharacteristic.getUuid().toString());
 
                         mReadCharacteristic = gattCharacteristic;
                         mBluetoothGatt.readCharacteristic(gattCharacteristic);  /// For Testing removed
                     }
                     if (charaProp == 8 && BluetoothGattCharacteristic.PROPERTY_WRITE > 0) {
-                        Log.e("Write char String is -->", "" + gattCharacteristic.getUuid().toString());
                         mWriteCharacteristic = gattCharacteristic;
                     }
                 }
@@ -251,16 +245,11 @@ public class BluetoothServiceClass extends Service {
                 updateStringData = "";
                 updateStringData = Base64Hex.decrypt(data, AppConstants.BEL_ENC_KEY);
                 if (hexDataReceived.length() == 40) {
-                    Log.e(TAG, "update in 40" + updateStringData);
                     updateStringData = Base64Hex.decrypt(hexDataReceived.substring(0, 32), AppConstants.BEL_ENC_KEY);
                     updateStringData += "0\"}";
 
                 } else {
-
                     updateStringData = Base64Hex.decrypt(hexDataReceived, AppConstants.BEL_ENC_KEY);
-                    Log.e(TAG, "Update Data : " + updateStringData);
-
-
                 }
 
 
@@ -268,7 +257,6 @@ public class BluetoothServiceClass extends Service {
             }
 
         } catch (Exception e) {
-            Log.e(TAG, "coming in catch " + data);
             e.printStackTrace();
         }
     }
@@ -304,7 +292,6 @@ public class BluetoothServiceClass extends Service {
                         if (bleWiFICounter < 5) {
                             mBluetoothGatt.readCharacteristic(mReadCharacteristic);
                         } else {
-                            Log.e("bluetooth", "true");
                         }
 
                     }
@@ -325,7 +312,6 @@ public class BluetoothServiceClass extends Service {
 
     private void broadcastUpdate(final String action,
                                  final String data) {
-        Log.e("BluetoothData== > ", data);
         final Intent intent = new Intent(action);
         Log.w(TAG, "broadcastUpdate()");
         intent.putExtra(AppConstants.EXTRA_DATA, data);
@@ -433,7 +419,6 @@ public class BluetoothServiceClass extends Service {
     @SuppressLint("MissingPermission")
     public void writeCharacteristic(BluetoothGattCharacteristic characteristic) {
         if (mBluetoothGatt == null) {
-            Log.e("", "BluetoothAdapter not initialized");
             return;
         }
         mBluetoothGatt.writeCharacteristic(characteristic);
@@ -541,7 +526,7 @@ public class BluetoothServiceClass extends Service {
         try {
             Method m = device.getClass().getMethod("removeBond", (Class[]) null);
             ((Method) m).invoke(device, (Object[]) null);
-        } catch (Exception e) { Log.e(TAG, e.getMessage()); }
+        } catch (Exception e) { }
     }
 
 
